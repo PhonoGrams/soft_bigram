@@ -34,13 +34,6 @@ Cases are evaluated in that order, matching the authors' [C# reference](https://
 
 The paper writes insert/delete as cases 8–9 (`IDn`). When wt8 = wt9 the constant indel cost matches Table 4; that is what this package uses (`Insert`, `Delete`).
 
-## What the previous implementation got wrong
-
-- Treated bigrams as atomic tokens in a Levenshtein grid, instead of scoring the four characters of each pair.
-- Mapped wt8/wt9 onto an LCS fudge factor that is not in the paper.
-- Indexed `bigrams1[i]` out of range on the last row (panic on some inputs).
-- Allocated a full `(n+1)×(m+1)` matrix of `[]string` bigrams.
-
 ## Watchman
 
 Call `Similarity` on **already-normalized tokens** (Watchman's prepare pipeline). Do not run it on full `given + family` strings; Watchman's `BestPairsJaroWinkler` alignment still owns token pairing. Soft-Bidist replaces the inner `customJaroWinkler` call.
